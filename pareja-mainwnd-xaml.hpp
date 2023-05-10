@@ -22,8 +22,8 @@ public:
 	
 private:
 
-	void DoInitXamlContent() override;
-	UIElement DoTopXamlContainer() const override { return grid.as<UIElement>(); }
+	void DoInitXamlContent() final;
+	UIElement DoTopXamlContainer() const final { return grid.as<UIElement>(); }
 	void AdjustWndSize() const;
 
 	auto ClrDlg() const
