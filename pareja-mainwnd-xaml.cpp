@@ -1,9 +1,11 @@
 #include "pareja-mainwnd-xaml.hpp"
 #include "pareja-clrdlg-xaml.hpp"
 
-using namespace Pareja;
+namespace Pareja
+{
 
-void MainWndXaml::DoInitXamlContent()
+template<typename ClrDlgT>
+void MainWndXaml<ClrDlgT>::DoInitXamlContent()
 {
     // ----------------- [ The Grid - top level container ] ----------------- //
 
@@ -244,7 +246,8 @@ void MainWndXaml::DoInitXamlContent()
     bu_run.Click(on_bu_run_clicked);
 }
 
-void MainWndXaml::AdjustWndSize() const
+template<typename ClrDlgT>
+void MainWndXaml<ClrDlgT>::AdjustWndSize() const
 {
     auto xr = DoTopXamlContainer().XamlRoot();
 
@@ -262,7 +265,8 @@ void MainWndXaml::AdjustWndSize() const
     }
 }
 
-void MainWndXaml::EnableControls(bool e) const
+template<typename ClrDlgT>
+void MainWndXaml<ClrDlgT>::EnableControls(bool e) const
 {
     slider_c1_r1.IsEnabled(e);
     slider_c1_r2.IsEnabled(e);
@@ -279,7 +283,8 @@ void MainWndXaml::EnableControls(bool e) const
     bu_run.IsEnabled(e);
 }
 
-void MainWndXaml::GetTargetRect(RECT& rct) const
+template<typename ClrDlgT>
+void MainWndXaml<ClrDlgT>::GetTargetRect(RECT& rct) const
 {
     auto factor = RasterizationScale();
 
@@ -293,4 +298,6 @@ void MainWndXaml::GetTargetRect(RECT& rct) const
     rct.top = LONG(height + 0.5);
     rct.right = rcc.right;
     rct.bottom = rcc.bottom;
+}
+
 }

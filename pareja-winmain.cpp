@@ -12,26 +12,20 @@ using namespace Windows::Foundation;
 
 using namespace Pareja;
 
-InitXamlEngine ixe{};
-MainWndXaml mainwnd_xaml{};
+using ClrDlgImpl = ClrDlgXamlPopup; // available options: ClrDlgXamlPopup, ClrDlgXamlChild
 
-// Choose one impl:
-// ClrDlgXamlPopup clrdlg_xaml{};
- ClrDlgXamlChild clrdlg_xaml{};
+InitXamlEngine ixe{};
+MainWndXaml<ClrDlgImpl> mainwnd_xaml{};
 
 HWND CreateMainWnd(HINSTANCE, int);
 LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
 
 int CALLBACK wWinMain(_In_ HINSTANCE hinst, _In_opt_ HINSTANCE, _In_ PWSTR, _In_ int nCmdShow)
 {
-    mainwnd_xaml.RegisterClrDlg(clrdlg_xaml);
-    clrdlg_xaml.RegisterMainWnd(mainwnd_xaml);
-
     auto main_wnd = CreateMainWnd(hinst, nCmdShow);
     assert(main_wnd != NULL);
     mainwnd_xaml.AttachTo(main_wnd);
-
-    clrdlg_xaml.CreateHostAndAttach(hinst, main_wnd);
+    mainwnd_xaml.ClrDlg().CreateHostAndAttach(hinst, main_wnd);
 
     ShowWindow(main_wnd, nCmdShow);
     UpdateWindow(main_wnd);
@@ -54,7 +48,6 @@ HWND CreateMainWnd(HINSTANCE hinst, int nCmdShow)
 
     wc.cbSize = sizeof(WNDCLASSEXW);
     wc.lpfnWndProc = MainWndProc;
-    //wc.hInstance = hinst;
     wc.lpszClassName = wc_name;
     wc.hbrBackground = HBRUSH(COLOR_ACTIVECAPTION + 1);
     wc.hCursor = LoadCursorW(nullptr, IDC_ARROW);
@@ -71,7 +64,7 @@ HWND CreateMainWnd(HINSTANCE hinst, int nCmdShow)
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
         NULL,
         NULL,
-        0,//hinst,
+        0,
         NULL
     );
 }
@@ -80,19 +73,6 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
     {
-    /*case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc;
-        wchar_t greeting[] = L"Hello World in Win32!";
-
-        hdc = BeginPaint(hwnd, &ps);
-        TextOut(hdc, 300, 500, greeting, (int)wcslen(greeting));
-        EndPaint(hwnd, &ps);
-
-        break;
-    }*/
-
     case WM_DESTROY:
     
         PostQuitMessage(0);
@@ -101,7 +81,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_SIZE:
     {
         mainwnd_xaml.OnHostWndResize();
-        clrdlg_xaml.OnMainWndResize();
+        mainwnd_xaml.ClrDlg().OnMainWndResize();
 
         return 0;
     }

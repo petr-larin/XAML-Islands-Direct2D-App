@@ -6,14 +6,14 @@
 namespace Pareja
 {
 
-class MainWndXaml;
+template<typename ClrDlgT> class MainWndXaml;
 
 class ClrDlgXamlBase : public Win32XamlIsland
 {
 public:
 
 	ClrDlgXamlBase() = default;
-	auto RegisterMainWnd(const MainWndXaml& main_wnd) { this->main_wnd = &main_wnd; }
+
 	virtual void ShowHost(bool) const = 0;
 	virtual void CreateHostAndAttach(HINSTANCE, HWND parent) = 0;
 	virtual void OnMainWndResize() const {};
@@ -21,20 +21,10 @@ public:
 protected:
 
 	UIElement DoTopXamlContainer() const final { return sp_buttons.as<UIElement>(); }
-
-	const MainWndXaml* MainWnd() const
-	{
-		assert(main_wnd != nullptr);
-		return main_wnd;
-	}
-
 	static LRESULT CALLBACK ClrDlgProc(HWND, UINT, WPARAM, LPARAM);
-
-//private:
 
 	StackPanel sp_buttons{};
 	Button bu_ok{}, bu_cancel{};
-	const MainWndXaml* main_wnd{ nullptr };
 
 private:
 
@@ -46,27 +36,32 @@ class ClrDlgXamlPopup : public ClrDlgXamlBase
 {
 public:
 
-	ClrDlgXamlPopup() = default;
+	ClrDlgXamlPopup(MainWndXaml<ClrDlgXamlPopup>& main_wnd) : main_wnd{ main_wnd } {}
 	void ShowHost(bool) const final;
 	void CreateHostAndAttach(HINSTANCE, HWND) final;
 
 private:
 
+	//MainWndXaml<ClrDlgXamlPopup>& MainWnd() const {	return main_wnd; }
 	void AdjustWndSize() const final;
+	MainWndXaml<ClrDlgXamlPopup>& main_wnd;
 };
+
 
 class ClrDlgXamlChild : public ClrDlgXamlBase
 {
 public:
 
-	ClrDlgXamlChild() = default;
+	ClrDlgXamlChild(MainWndXaml<ClrDlgXamlChild>& main_wnd) : main_wnd{ main_wnd } {}
 	void ShowHost(bool) const final;
 	void CreateHostAndAttach(HINSTANCE, HWND) final;
 	virtual void OnMainWndResize() const final { AdjustWndSize(); }
 
 private:
 
+	//MainWndXaml<ClrDlgXamlChild>& MainWnd() const { return main_wnd; }
 	void AdjustWndSize() const final;
+	MainWndXaml<ClrDlgXamlChild>& main_wnd;
 };
 
 

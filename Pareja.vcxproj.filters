@@ -21,9 +21,6 @@
     <Manifest Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pareja-mainwnd-xaml.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pareja-clrdlg-xaml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

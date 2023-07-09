@@ -94,7 +94,7 @@ void ClrDlgXamlPopup::AdjustWndSize() const
 
     if (xr)
     {
-        auto
+        const auto
             factor = RasterizationScale(),
             width = sp_buttons.Width(),
             height = sp_buttons.Height();
@@ -124,21 +124,19 @@ void ClrDlgXamlPopup::AdjustWndSize() const
 
 void ClrDlgXamlPopup::ShowHost(bool show) const
 {
-    if (show) {
-        EnableWindow(MainWnd()->HwndHost(), FALSE);
+    if (show) 
+    {
+        EnableWindow(main_wnd.HwndHost(), FALSE);
 
         RECT rc{};
-        GetWindowRect(MainWnd()->HwndHost(), &rc);
+        GetWindowRect(main_wnd.HwndHost(), &rc);
         auto dlgx = (rc.left + rc.right) / 2, dlgy = rc.top + (rc.bottom - rc.top) / 3;
 
         SetWindowPos(HwndHost(), NULL, dlgx, dlgy, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW);
     }
-    else {
-        //}
-
-        //void ClrDlgXamlPopup::HideHost() const
-        //{
-        EnableWindow(MainWnd()->HwndHost(), TRUE);
+    else 
+    {
+        EnableWindow(main_wnd.HwndHost(), TRUE);
         ShowWindow(HwndHost(), SW_HIDE);
     }
 }
@@ -158,7 +156,7 @@ void ClrDlgXamlPopup::CreateHostAndAttach(HINSTANCE hinst, HWND parent)
 
     RegisterClassExW(&wc);
 
-    auto clr_dlg = CreateWindowExW(
+    const auto clr_dlg = CreateWindowExW(
         0,
         wc_name,
         L": : Pareja : : Choose colors",
@@ -175,6 +173,7 @@ void ClrDlgXamlPopup::CreateHostAndAttach(HINSTANCE hinst, HWND parent)
     AttachTo(clr_dlg);
 }
 
+
 void ClrDlgXamlChild::AdjustWndSize() const
 {
     auto xr = DoTopXamlContainer().XamlRoot();
@@ -187,7 +186,7 @@ void ClrDlgXamlChild::AdjustWndSize() const
             height = sp_buttons.Height();
 
         RECT rct{};
-        MainWnd()->GetTargetRect(rct);
+        main_wnd.GetTargetRect(rct);
 
         SetWindowPos(
             HwndXamlIsland(), 0,
@@ -207,16 +206,14 @@ void ClrDlgXamlChild::AdjustWndSize() const
 
 void ClrDlgXamlChild::ShowHost(bool show) const
 {
-    if (show) {
-    //EnableWindow(MainWnd()->HwndXamlIsland(), FALSE);
-    MainWnd()->EnableControls(false);
-    AnimateWindow(HwndHost(), 200, AW_HOR_POSITIVE);
+    if (show)
+    {
+        main_wnd.EnableControls(false);
+        AnimateWindow(HwndHost(), 200, AW_HOR_POSITIVE);
     }
-    else {
-        //void ClrDlgXamlChild::HideHost() const
-        //{
-            //EnableWindow(MainWnd()->HwndHost(), TRUE);
-        MainWnd()->EnableControls(true);
+    else
+    {
+        main_wnd.EnableControls(true);
         AnimateWindow(HwndHost(), 125, AW_HIDE | AW_HOR_NEGATIVE);
     }
 }

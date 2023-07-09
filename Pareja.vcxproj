@@ -144,7 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pareja-clrdlg-xaml.cpp" />
-    <ClCompile Include="pareja-mainwnd-xaml.cpp" />
     <ClCompile Include="pareja-winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
