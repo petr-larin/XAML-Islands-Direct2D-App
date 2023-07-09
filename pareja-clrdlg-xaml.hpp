@@ -42,7 +42,6 @@ public:
 
 private:
 
-	//MainWndXaml<ClrDlgXamlPopup>& MainWnd() const {	return main_wnd; }
 	void AdjustWndSize() const final;
 	MainWndXaml<ClrDlgXamlPopup>& main_wnd;
 };
@@ -59,7 +58,6 @@ public:
 
 private:
 
-	//MainWndXaml<ClrDlgXamlChild>& MainWnd() const { return main_wnd; }
 	void AdjustWndSize() const final;
 	MainWndXaml<ClrDlgXamlChild>& main_wnd;
 };
