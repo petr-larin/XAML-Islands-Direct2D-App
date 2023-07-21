@@ -2,11 +2,12 @@
 
 #include "win32-xaml-island-base.hpp"
 #include "pareja-common-xaml.hpp"
+#include "pareja-mainwnd-xaml.hpp"
 
 namespace Pareja
 {
 
-template<typename ClrDlgT> class MainWndXaml;
+//template<typename ClrDlgT> class MainWndXaml;
 
 class ClrDlgXamlBase : public Win32XamlIsland
 {

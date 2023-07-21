@@ -2,7 +2,7 @@
 
 #include "win32-xaml-island-base.hpp"
 #include "pareja-common-xaml.hpp"
-#include "pareja-clrdlg-xaml.hpp"
+//#include "pareja-clrdlg-xaml.hpp"
 
 namespace Pareja
 {
