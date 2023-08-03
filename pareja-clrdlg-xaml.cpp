@@ -90,36 +90,31 @@ LRESULT CALLBACK ClrDlgXamlBase::ClrDlgProc(HWND hwnd, UINT msg, WPARAM wParam, 
 
 void ClrDlgXamlPopup::AdjustWndSize() const
 {
-    auto xr = DoTopXamlContainer().XamlRoot();
+    const auto
+        factor = RasterizationScale(),
+        width = sp_buttons.Width(),
+        height = sp_buttons.Height();
 
-    if (xr)
-    {
-        const auto
-            factor = RasterizationScale(),
-            width = sp_buttons.Width(),
-            height = sp_buttons.Height();
+    SetWindowPos(
+        HwndXamlIsland(), 0,
+        0, 0, 
+        int(width * factor),
+        int(height * factor),
+        SWP_SHOWWINDOW);
 
-        SetWindowPos(
-            HwndXamlIsland(), 0,
-            0, 0, 
-            int(width * factor),
-            int(height * factor),
-            SWP_SHOWWINDOW);
+    RECT rc_host_cli{}, rc_host_wnd{}, rc_xi{};
+    GetClientRect(HwndHost(), &rc_host_cli);
+    GetWindowRect(HwndHost(), &rc_host_wnd);
+    GetWindowRect(HwndXamlIsland(), &rc_xi);
 
-        RECT rc_host_cli{}, rc_host_wnd{}, rc_xi{};
-        GetClientRect(HwndHost(), &rc_host_cli);
-        GetWindowRect(HwndHost(), &rc_host_wnd);
-        GetWindowRect(HwndXamlIsland(), &rc_xi);
-
-        SetWindowPos(
-            HwndHost(), 0,
-            0, 0,
-            rc_xi.right - rc_xi.left + 
-                rc_host_wnd.right - rc_host_wnd.left - rc_host_cli.right + rc_host_cli.left,
-            rc_xi.bottom - rc_xi.top +
-                rc_host_wnd.bottom - rc_host_wnd.top - rc_host_cli.bottom + rc_host_cli.top,
-            SWP_NOACTIVATE | SWP_NOMOVE);
-    }
+    SetWindowPos(
+        HwndHost(), 0,
+        0, 0,
+        rc_xi.right - rc_xi.left + 
+            rc_host_wnd.right - rc_host_wnd.left - rc_host_cli.right + rc_host_cli.left,
+        rc_xi.bottom - rc_xi.top +
+            rc_host_wnd.bottom - rc_host_wnd.top - rc_host_cli.bottom + rc_host_cli.top,
+        SWP_NOACTIVATE | SWP_NOMOVE);
 }
 
 void ClrDlgXamlPopup::ShowHost(bool show) const
@@ -144,7 +139,6 @@ void ClrDlgXamlPopup::ShowHost(bool show) const
 void ClrDlgXamlPopup::CreateHostAndAttach(HINSTANCE hinst, HWND parent)
 {
     const wchar_t wc_name[] = L"Pareja::ClrDlgPopup";
-
     WNDCLASSEXW wc{};
 
     wc.cbSize = sizeof(WNDCLASSEXW);
@@ -169,39 +163,31 @@ void ClrDlgXamlPopup::CreateHostAndAttach(HINSTANCE hinst, HWND parent)
     );
 
     assert(clr_dlg != NULL);
-
     AttachTo(clr_dlg);
 }
 
-
 void ClrDlgXamlChild::AdjustWndSize() const
 {
-    auto xr = DoTopXamlContainer().XamlRoot();
+    const auto
+        factor = RasterizationScale(),
+        width = sp_buttons.Width(),
+        height = sp_buttons.Height();
 
-    if (xr)
-    {
-        auto
-            factor = RasterizationScale(),
-            width = sp_buttons.Width(),
-            height = sp_buttons.Height();
+    const auto rct{ main_wnd.GetTargetRect() };
 
-        RECT rct{};
-        main_wnd.GetTargetRect(rct);
+    SetWindowPos(
+        HwndXamlIsland(), 0,
+        0, 0,
+        int(width * factor),
+        rct.bottom - rct.top,
+        SWP_SHOWWINDOW);
 
-        SetWindowPos(
-            HwndXamlIsland(), 0,
-            0, 0,
-            int(width * factor),
-            rct.bottom - rct.top,
-            SWP_SHOWWINDOW);
-
-        SetWindowPos(
-            HwndHost(), 0,
-            0, rct.top,
-            int(width * factor),
-            rct.bottom - rct.top,
-            SWP_NOACTIVATE);
-    }
+    SetWindowPos(
+        HwndHost(), 0,
+        0, rct.top,
+        int(width * factor),
+        rct.bottom - rct.top,
+        SWP_NOACTIVATE);
 }
 
 void ClrDlgXamlChild::ShowHost(bool show) const
@@ -221,7 +207,6 @@ void ClrDlgXamlChild::ShowHost(bool show) const
 void ClrDlgXamlChild::CreateHostAndAttach(HINSTANCE hinst, HWND parent)
 {
     const wchar_t wc_name[] = L"Pareja::ClrDlgChild";
-
     WNDCLASSEXW wc{};
 
     wc.cbSize = sizeof(WNDCLASSEXW);
@@ -246,6 +231,5 @@ void ClrDlgXamlChild::CreateHostAndAttach(HINSTANCE hinst, HWND parent)
     );
 
     assert(clr_dlg != NULL);
-
     AttachTo(clr_dlg);
 }

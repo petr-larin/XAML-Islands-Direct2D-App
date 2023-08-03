@@ -2,7 +2,6 @@
 
 #include "win32-xaml-island-base.hpp"
 #include "pareja-common-xaml.hpp"
-//#include "pareja-clrdlg-xaml.hpp"
 
 namespace Pareja
 {
@@ -13,9 +12,9 @@ public:
 
 	MainWndXaml() = default;
 
-	void OnHostWndResize() const { AdjustWndSize(); }
+	void OnHostWndResize() const { AdjustWndSize(); } //
 	void EnableControls(bool) const;
-	void GetTargetRect(RECT& rc) const;
+	RECT GetTargetRect() const;
 	auto& ClrDlg() { return clr_dlg; }
 
 private:
@@ -93,13 +92,13 @@ void MainWndXaml<ClrDlgT>::DoInitXamlContent()
     grid.HorizontalAlignment(HorizontalAlignment::Left);
     grid.VerticalAlignment(VerticalAlignment::Top);
 
-    auto on_xaml_root_changed = [=](XamlRoot const& s, XamlRootChangedEventArgs const&)
-    {
-        AdjustWndSize();
-    };
+ //   auto on_xaml_root_changed = [=](XamlRoot const& s, XamlRootChangedEventArgs const&)
+ //   {
+ //       AdjustWndSize();
+ //   };
 
-    assert(grid.XamlRoot());
-    grid.XamlRoot().Changed(on_xaml_root_changed);
+ //   assert(grid.XamlRoot());
+ //   grid.XamlRoot().Changed(on_xaml_root_changed);
 
     // -------------------- [ Text blocks - headers ] -------------------- //
 
@@ -291,20 +290,8 @@ void MainWndXaml<ClrDlgT>::DoInitXamlContent()
 template<typename ClrDlgT>
 void MainWndXaml<ClrDlgT>::AdjustWndSize() const
 {
-    auto xr = DoTopXamlContainer().XamlRoot();
-
-    if (xr)
-    {
-        const auto factor = RasterizationScale();
-
-        RECT rc{};
-        GetClientRect(HwndHost(), &rc);
-
-        auto height = grid.Height();
-        height = std::min(height * factor, double(rc.bottom - rc.top));
-
-        SetWindowPos(HwndXamlIsland(), 0, 0, 0, rc.right - rc.left, int(height), SWP_SHOWWINDOW);
-    }
+    RECT rct{ GetTargetRect() };
+    SetWindowPos(HwndXamlIsland(), 0, 0, 0, rct.right, rct.top, SWP_SHOWWINDOW);
 }
 
 template<typename ClrDlgT>
@@ -326,7 +313,7 @@ void MainWndXaml<ClrDlgT>::EnableControls(bool e) const
 }
 
 template<typename ClrDlgT>
-void MainWndXaml<ClrDlgT>::GetTargetRect(RECT& rct) const
+RECT MainWndXaml<ClrDlgT>::GetTargetRect() const
 {
     const auto factor = RasterizationScale();
 
@@ -336,10 +323,7 @@ void MainWndXaml<ClrDlgT>::GetTargetRect(RECT& rct) const
     auto height = grid.Height();
     height = std::min(height * factor, double(rcc.bottom - rcc.top));
 
-    rct.left = 0;
-    rct.top = LONG(height + 0.5);
-    rct.right = rcc.right;
-    rct.bottom = rcc.bottom;
+    return { 0, LONG(height + 0.5), rcc.right, rcc.bottom };
 }
 
 }

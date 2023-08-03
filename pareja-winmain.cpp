@@ -25,6 +25,7 @@ int CALLBACK wWinMain(_In_ HINSTANCE hinst, _In_opt_ HINSTANCE, _In_ PWSTR, _In_
     auto main_wnd = CreateMainWnd(hinst, nCmdShow);
     assert(main_wnd != NULL);
     mainwnd_xaml.AttachTo(main_wnd);
+    mainwnd_xaml.OnHostWndResize();
     mainwnd_xaml.ClrDlg().CreateHostAndAttach(hinst, main_wnd);
 
     ShowWindow(main_wnd, nCmdShow);
@@ -43,7 +44,6 @@ int CALLBACK wWinMain(_In_ HINSTANCE hinst, _In_opt_ HINSTANCE, _In_ PWSTR, _In_
 HWND CreateMainWnd(HINSTANCE hinst, int nCmdShow)
 {
     const wchar_t wc_name[] = L"Pareja::MainWnd";
-
     WNDCLASSEXW wc{};
 
     wc.cbSize = sizeof(WNDCLASSEXW);

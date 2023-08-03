@@ -1,13 +1,10 @@
 #pragma once
 
 #include "win32-xaml-island-base.hpp"
-#include "pareja-common-xaml.hpp"
 #include "pareja-mainwnd-xaml.hpp"
 
 namespace Pareja
 {
-
-//template<typename ClrDlgT> class MainWndXaml;
 
 class ClrDlgXamlBase : public Win32XamlIsland
 {
@@ -37,22 +34,21 @@ class ClrDlgXamlPopup : public ClrDlgXamlBase
 {
 public:
 
-	ClrDlgXamlPopup(MainWndXaml<ClrDlgXamlPopup>& main_wnd) : main_wnd{ main_wnd } {}
+	ClrDlgXamlPopup(MainWndXaml<ClrDlgXamlPopup> const& main_wnd) : main_wnd{ main_wnd } {}
 	void ShowHost(bool) const final;
 	void CreateHostAndAttach(HINSTANCE, HWND) final;
 
 private:
 
 	void AdjustWndSize() const final;
-	MainWndXaml<ClrDlgXamlPopup>& main_wnd;
+	MainWndXaml<ClrDlgXamlPopup> const& main_wnd;
 };
-
 
 class ClrDlgXamlChild : public ClrDlgXamlBase
 {
 public:
 
-	ClrDlgXamlChild(MainWndXaml<ClrDlgXamlChild>& main_wnd) : main_wnd{ main_wnd } {}
+	ClrDlgXamlChild(MainWndXaml<ClrDlgXamlChild> const& main_wnd) : main_wnd{ main_wnd } {}
 	void ShowHost(bool) const final;
 	void CreateHostAndAttach(HINSTANCE, HWND) final;
 	virtual void OnMainWndResize() const final { AdjustWndSize(); }
@@ -60,8 +56,7 @@ public:
 private:
 
 	void AdjustWndSize() const final;
-	MainWndXaml<ClrDlgXamlChild>& main_wnd;
+	MainWndXaml<ClrDlgXamlChild> const& main_wnd;
 };
-
 
 }

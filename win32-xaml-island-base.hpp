@@ -59,7 +59,6 @@ public:
 
 	auto AttachTo(HWND);
 	auto HwndXamlIsland() const { return hWndXamlIsland; }
-	//auto HwndHost() const { return hWndHost; }
 
 private:
 
@@ -68,7 +67,6 @@ private:
 
 	DesktopWindowXamlSource desktopSource{};
 	HWND hWndXamlIsland{ NULL };
-	//HWND hWndHost{ NULL };
 
 	// Declare XAML controls here (or under protected)
 };
@@ -81,26 +79,19 @@ inline auto Win32XamlIsland::AttachTo(HWND hwnd) // Template Method
 	// - Microsoft
 
 	assert(hWndXamlIsland == NULL);
-
 	assert(hwnd != NULL);
 	hWndHost = hwnd;
 
 	auto interop = desktopSource.as<IDesktopWindowXamlSourceNative>();
 	check_hresult(interop->AttachToWindow(hwnd));
 	interop->get_WindowHandle(&hWndXamlIsland);
-
 	desktopSource.Content(DoTopXamlContainer());
 
 	DoInitXamlContent();
-
 	DoTopXamlContainer().UpdateLayout();
 }
 
 inline double RasterizationScale()
 {
-	auto desktopDc = GetDC(NULL);
-	if (desktopDc == NULL) return 1.0;
-
-	auto horizontalDPI = GetDeviceCaps(desktopDc, LOGPIXELSX);
-	return double(horizontalDPI) * 25.0 / 24.0 / 100.0;
+	return double(GetDpiForSystem()) * 25.0 / 24.0 / 100.0;
 }
